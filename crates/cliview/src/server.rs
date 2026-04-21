@@ -88,9 +88,7 @@ async fn stream(
     });
 
     let sse_stream = ReceiverStream::new(rx).map(|v| {
-        Ok::<_, Infallible>(
-            Event::default().data(serde_json::to_string(&v).unwrap_or_default()),
-        )
+        Ok::<_, Infallible>(Event::default().data(serde_json::to_string(&v).unwrap_or_default()))
     });
 
     Ok(Sse::new(sse_stream))
@@ -121,7 +119,7 @@ async fn proxy_to(base: &str, uri: &Uri) -> Response {
                     let mut builder = Response::builder().status(status);
                     if let Some(h) = builder.headers_mut() {
                         for (k, v) in headers.iter() {
-                            if k.as_str().to_ascii_lowercase() != "transfer-encoding" {
+                            if !k.as_str().eq_ignore_ascii_case("transfer-encoding") {
                                 h.insert(k.clone(), v.clone());
                             }
                         }
@@ -150,4 +148,3 @@ async fn proxy_to(base: &str, uri: &Uri) -> Response {
             .into_response(),
     }
 }
-

@@ -98,7 +98,10 @@ impl WebApp {
     {
         let entry = PageEntry {
             title: title.into(),
-            handler: Arc::new(PageFn { f, _phantom: PhantomData }),
+            handler: Arc::new(PageFn {
+                f,
+                _phantom: PhantomData,
+            }),
         };
         self.registry.pages.insert(id.into(), entry);
         self
@@ -120,7 +123,10 @@ impl WebApp {
     {
         let entry = ActionEntry {
             title: title.into(),
-            handler: Arc::new(ActionFn { f, _phantom: PhantomData }),
+            handler: Arc::new(ActionFn {
+                f,
+                _phantom: PhantomData,
+            }),
         };
         self.registry.actions.insert(id.into(), entry);
         self

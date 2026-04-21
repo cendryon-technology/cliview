@@ -14,8 +14,14 @@ struct Row {
 
 async fn list_rows() -> anyhow::Result<Vec<Row>> {
     Ok(vec![
-        Row { id: 1, name: "a".into() },
-        Row { id: 2, name: "b".into() },
+        Row {
+            id: 1,
+            name: "a".into(),
+        },
+        Row {
+            id: 2,
+            name: "b".into(),
+        },
     ])
 }
 

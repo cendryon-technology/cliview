@@ -11,9 +11,21 @@ struct User {
 
 async fn list_users() -> anyhow::Result<Vec<User>> {
     Ok(vec![
-        User { id: 1, name: "Alice".into(), email: "alice@example.com".into() },
-        User { id: 2, name: "Bob".into(), email: "bob@example.com".into() },
-        User { id: 3, name: "Carol".into(), email: "carol@example.com".into() },
+        User {
+            id: 1,
+            name: "Alice".into(),
+            email: "alice@example.com".into(),
+        },
+        User {
+            id: 2,
+            name: "Bob".into(),
+            email: "bob@example.com".into(),
+        },
+        User {
+            id: 3,
+            name: "Carol".into(),
+            email: "carol@example.com".into(),
+        },
     ])
 }
 

@@ -75,8 +75,8 @@ where
     O: Serialize + Send + 'static,
 {
     async fn call(&self, input: Value) -> Result<Value> {
-        let typed: I = serde_json::from_value(input)
-            .map_err(|e| Error::BadRequest(e.to_string()))?;
+        let typed: I =
+            serde_json::from_value(input).map_err(|e| Error::BadRequest(e.to_string()))?;
         let out = (self.f)(typed).await?;
         Ok(serde_json::to_value(out).map_err(|e| Error::Handler(e.into()))?)
     }
