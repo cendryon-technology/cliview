@@ -1,0 +1,12 @@
+[package]
+name = "demo-cli"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+cliview = { path = "../../crates/cliview" }
+tokio = { workspace = true }
+serde = { workspace = true }
+schemars = { workspace = true }
+anyhow = { workspace = true }

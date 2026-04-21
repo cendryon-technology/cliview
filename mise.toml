@@ -1,0 +1,47 @@
+[tasks.demo]
+description = "Build the frontend and run the demo CLI's web UI"
+depends = ["build-ui"]
+run = "cargo run -p demo-cli -- web ."
+
+[tasks.check]
+description = "Check the workspace"
+run = "cargo check"
+
+[tasks.build]
+description = "Build release binaries"
+run = "cargo build --release"
+
+[tasks.build-ui]
+description = "Build the SvelteKit frontend and copy dist into the crate"
+run = """
+(cd frontend && pnpm install && pnpm build)
+rm -rf crates/cliview/frontend/dist
+cp -R frontend/build crates/cliview/frontend/dist
+"""
+
+[tasks.dev-ui]
+description = "Run Vite dev server on :5173"
+run = "cd frontend && pnpm dev"
+
+[tasks.install-ui]
+description = "Install frontend deps"
+run = "cd frontend && pnpm install"
+
+[tasks.test]
+description = "Run all tests"
+run = "cargo test"
+
+[tasks.install-skill]
+description = "Symlink the cliview-rust-cli skill into ~/.claude/skills so Claude Code can discover it"
+run = """
+set -euo pipefail
+src="$(pwd)/skills/cliview-rust-cli"
+dst="$HOME/.claude/skills/cliview-rust-cli"
+mkdir -p "$HOME/.claude/skills"
+if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+  echo "refusing to overwrite non-symlink at $dst" >&2
+  exit 1
+fi
+ln -sfn "$src" "$dst"
+echo "linked $dst -> $src"
+"""
