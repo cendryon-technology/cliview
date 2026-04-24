@@ -14,6 +14,34 @@ env:
   RUSTFLAGS: "-D warnings"
 
 jobs:
+  frontend:
+    name: frontend sanity build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: pnpm install
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm build
+        working-directory: frontend
+        run: pnpm build
+
+      - name: svelte-check
+        working-directory: frontend
+        run: pnpm check
+
   test:
     name: test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -31,27 +59,6 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-          cache-dependency-path: frontend/pnpm-lock.yaml
-
-      - name: Build frontend
-        working-directory: frontend
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm build
-
-      - name: Sync embedded SPA
-        run: |
-          rm -rf crates/cliview/frontend/dist
-          cp -R frontend/build crates/cliview/frontend/dist
-
       - name: cargo fmt
         run: cargo fmt --all -- --check
 
@@ -62,4 +69,5 @@ jobs:
         run: cargo test --workspace
 
       - name: cargo package (dry-run)
-        run: cargo package -p cliview --allow-dirty
+        if: matrix.os == 'ubuntu-latest'
+        run: cargo package -p cliview
